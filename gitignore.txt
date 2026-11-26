@@ -1,0 +1,7 @@
+# Nunca enviar ao GitHub: senha do banco e registros do servidor.
+api/config.php
+api/logs/
+*.log
+# Arquivos do sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,343 @@
+/* ===== FONTES (arquivos locais na pasta fonts/; licença OFL) ===== */
+/* Fraunces: títulos principais (h1) e nome na barra do topo. */
+@font-face{font-family:"Fraunces";src:url("../fonts/Fraunces.woff") format("woff");font-weight:100 900;font-style:normal;font-display:swap}
+/* Lora: subtítulos (h2, h3), abas e rótulos de destaque. */
+@font-face{font-family:"Lora";src:url("../fonts/Lora.woff") format("woff");font-weight:400 700;font-style:normal;font-display:swap}
+/* Source Serif 4: texto padrão de toda a página. */
+@font-face{font-family:"Source Serif 4";src:url("../fonts/SourceSerif4.woff") format("woff");font-weight:200 900;font-style:normal;font-display:swap}
+/* ESTILOS DO SITE (cores, tamanhos e posição dos elementos). Cada linha abaixo é uma regra: seletor { propriedade: valor }. */
+/* Variáveis de cor e tamanho (paleta do projeto). Para mudar uma cor no site inteiro, altere só aqui. */
+:root{--azul-escuro:#1D5FCC;--azul:#3C8DFF;--azul-medio:#6AA8FF;--azul-claro:#A1C8FF;--azul-fundo:#D9E9FF;--branco:#FFF;--texto:#1F2933;--texto-suave:#52606D;--sucesso:#15803D;--atencao:#B45309;--erro:#B91C1C;--raio:10px;--botao:#1D5FCC;--botao-hover:#174ea8;--ok-fundo:#DCFCE7;--erro-fundo:#FEE2E2;--neutro-fundo:#E4E7EB;--sombra:0 1px 3px rgba(29,95,204,.10),0 4px 14px rgba(29,95,204,.06)}
+/* TEMA ESCURO: ativado pelo botão da lua/sol no topo (atributo data-tema="escuro" na tag <html>). Só troca os valores das variáveis. */
+:root[data-tema="escuro"]{--azul-escuro:#7DB1FF;--azul:#4C93FF;--azul-medio:#3A6FBF;--azul-claro:#2F4A75;--azul-fundo:#14223A;--branco:#0E1626;--texto:#E6EBF2;--texto-suave:#A3B0C2;--sucesso:#4ADE80;--atencao:#FBBF24;--erro:#F87171;--ok-fundo:#12301F;--erro-fundo:#3A1818;--neutro-fundo:#243044;--sombra:0 1px 3px rgba(0,0,0,.4);color-scheme:dark}
+/* Faz largura e altura incluírem borda e espaçamento interno (facilita o cálculo do layout). */
+*{box-sizing:border-box}
+/* Corpo da página: sem margem, fonte, cor do texto e fundo. */
+body{margin:0;font-family:"Source Serif 4",Georgia,"Times New Roman",serif;font-size:1.0625rem;color:var(--texto);background:var(--branco);line-height:1.5}
+/* Títulos: espaçamento entre linhas e margens. */
+h1,h2,h3{line-height:1.2;margin:0 0 .5rem}
+/* Títulos em Fraunces; subtítulos em Lora. */
+h1{font-family:"Fraunces",Georgia,serif;font-weight:700}
+h2,h3,.tabs button,.tabs a{font-family:"Lora",Georgia,serif}
+/* Links na cor azul escura. */
+a{color:var(--azul-escuro)}
+/* Contorno visível ao navegar pelo teclado (acessibilidade). */
+:focus-visible{outline:3px solid var(--azul-escuro);outline-offset:2px}
+/* Conteúdo principal: largura máxima centralizada. */
+main{max-width:1100px;margin:auto;padding:1.5rem 1rem 3rem}
+/* Coluna estreita (login, cadastro, agendar). */
+.estreito{max-width:440px}
+/* Cartão: fundo branco, borda azul clara e cantos arredondados. */
+.card{background:var(--branco);border:1px solid var(--azul-claro);border-radius:var(--raio);padding:1.25rem;margin-bottom:1rem}
+/* Cartão com fundo azul claro. */
+.card.fundo{background:var(--azul-fundo);border-color:var(--azul-fundo)}
+/* Rótulos dos campos. */
+label{display:block;font-weight:600;font-size:.9rem;margin:.9rem 0 .25rem}
+/* Campos de formulário: ocupam toda a largura, altura mínima de 44px (fácil de tocar no celular). */
+input,select{width:100%;min-height:44px;padding:.5rem .7rem;font:inherit;border:2px solid var(--azul-claro);border-radius:8px;background:var(--branco);color:var(--texto)}
+/* Caixas de marcar e botões de opção mantêm o tamanho natural. */
+input[type=checkbox],input[type=radio]{width:auto;min-height:0}
+/* Caixa de marcar com o texto ao lado. */
+.check{display:flex;gap:.5rem;align-items:flex-start;font-weight:400}
+/* Botão principal: azul escuro com texto branco. */
+.btn{min-height:44px;padding:.5rem 1.2rem;font:inherit;font-weight:700;border-radius:8px;border:2px solid var(--azul-escuro);background:var(--botao);color:#fff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+/* Cor do botão quando o mouse passa por cima. */
+.btn:hover{background:var(--botao-hover)}
+/* Botão secundário: fundo branco com texto azul. */
+.btn.sec{background:var(--branco);color:var(--azul-escuro)}
+/* Secundário com o mouse por cima. */
+.btn.sec:hover{background:var(--azul-fundo)}
+/* Botão de ação perigosa (cancelar): vermelho. */
+.btn.perigo{background:var(--branco);color:var(--erro);border-color:var(--erro)}
+/* Botão que ocupa toda a largura. */
+.btn.cheio{width:100%;margin-top:1.2rem}
+/* Botão pequeno. */
+.btn.peq{min-height:36px;padding:.2rem .8rem;font-size:.9rem}
+/* Botão desabilitado: mais apagado. */
+.btn:disabled{opacity:.5;cursor:not-allowed}
+/* Linha de opções (tipos de consulta). */
+.opcoes{display:flex;gap:.6rem;flex-wrap:wrap}
+/* Cada opção é uma caixa clicável. */
+.opcao{flex:1;min-width:140px;border:2px solid var(--azul-claro);border-radius:8px;padding:.7rem;cursor:pointer;margin:0;font-weight:600}
+/* Esconde o botão de opção; a própria caixa funciona como botão. */
+.opcao input{position:absolute;opacity:0}
+/* Destaca a opção marcada. */
+.opcao:has(input:checked){background:var(--azul-fundo);border-color:var(--azul-escuro)}
+/* Contorno ao navegar pelo teclado. */
+.opcao:has(input:focus-visible){outline:3px solid var(--azul-escuro)}
+/* Texto pequeno da opção (duração). */
+.opcao small{display:block;font-weight:400;color:var(--texto-suave)}
+/* Grade de horários: várias colunas que se ajustam à largura. */
+.horarios{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:.5rem}
+/* Cada horário é um botão. */
+.horario{min-height:44px;border:2px solid var(--azul-medio);background:var(--branco);border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+/* Horário com o mouse por cima. */
+.horario:hover{background:var(--azul-fundo)}
+/* Horário escolhido: fundo azul escuro. */
+.horario[aria-pressed=true]{background:var(--botao);border-color:var(--azul-escuro);color:#fff}
+/* Texto de apoio em cinza. */
+.msg{color:var(--texto-suave)}
+/* Mensagens de erro em vermelho. */
+.erro{color:var(--erro);font-weight:600}
+/* Etiqueta arredondada (situação da consulta). */
+.badge{display:inline-block;padding:.1rem .6rem;border-radius:99px;font-size:.85rem;font-weight:700;background:var(--azul-fundo);color:var(--azul-escuro)}
+/* Cores das etiquetas: verde (ok), vermelho (cancelado/faltou) e cinza (inativo). */
+.badge.ok{background:var(--ok-fundo);color:var(--sucesso)}.badge.cancelado{background:var(--erro-fundo);color:var(--erro)}.badge.inativo{background:var(--neutro-fundo);color:var(--texto-suave)}
+/* Linha de abas do painel. */
+.tabs{display:flex;gap:.1rem;flex-wrap:wrap;border-bottom:2px solid var(--azul-claro);margin-bottom:1rem}
+/* Cada aba. */
+.tabs button{font:inherit;font-weight:600;background:none;border:0;padding:.7rem .75rem;cursor:pointer;border-bottom:4px solid transparent;margin-bottom:-2px;color:var(--texto-suave)}
+/* Aba selecionada: sublinhada em azul. */
+.tabs button[aria-selected=true]{color:var(--azul-escuro);border-bottom-color:var(--azul)}
+/* Permite rolar a tabela na horizontal em telas pequenas. */
+.tabela{overflow-x:auto}
+/* Tabelas ocupam toda a largura e têm bordas unidas. */
+table{width:100%;border-collapse:collapse}
+/* Células: alinhadas à esquerda, com espaçamento e linha divisória. */
+th,td{text-align:left;padding:.6rem;border-bottom:1px solid var(--azul-fundo)}
+/* Cabeçalho da tabela com fundo azul claro. */
+th{background:var(--azul-fundo)}
+/* Grade de campos lado a lado nos formulários. */
+.linha{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0 1rem}
+/* Colunas da agenda do dia (uma por profissional). */
+.colunas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+/* Bloco de uma consulta na agenda: barra azul à esquerda. */
+.bloco{border-left:5px solid var(--azul);background:var(--azul-fundo);border-radius:6px;padding:.5rem .7rem;margin-top:.5rem}
+/* Consulta em que o paciente faltou: vermelha. */
+.bloco.faltou{border-color:var(--erro);background:var(--erro-fundo)}
+/* Consulta cancelada: vermelha e riscada. */
+.bloco.cancelado{border-color:var(--erro);background:var(--erro-fundo);text-decoration:line-through}
+/* Grade de cartões (até 3 por linha, ajusta sozinha). */
+.grade3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+/* Quadro de mensagens flutuante, fixo na parte de baixo da tela. */
+#aviso{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:var(--texto);color:var(--branco);padding:.7rem 1.2rem;border-radius:8px;display:none;z-index:9}
+/* Se o usuário pediu menos animações no sistema, desliga as transições. */
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Layout baseado no Figma: barra azul, blocos alternados, faixa de pílulas, rodapé arredondado */
+/* BARRA DO TOPO. */
+.topo{background:var(--azul-fundo)}
+/* Conteúdo da barra: logo, menu e botões em linha. */
+.topo nav{max-width:1100px;margin:auto;padding:.7rem 1rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+/* Logo 'AgendaFácil': pílula azul escura. */
+.topo .marca{background:var(--botao);color:#fff;border-radius:999px;padding:.35rem 1.1rem;font-weight:800;text-decoration:none}
+/* Links do menu. */
+.topo .menu{display:flex;gap:1.1rem;flex-wrap:wrap;margin-right:auto}
+/* Botões da direita (Entrar, Criar conta ou Sair). */
+.topo .acoes{display:flex;gap:.8rem;align-items:center}
+/* Estilo dos links do menu. */
+.topo a.link{color:var(--texto);text-decoration:none;padding:.4rem .1rem;border-bottom:3px solid transparent}
+/* Link do menu com mouse por cima ou da página atual: sublinhado. */
+.topo a.link:hover,.topo a.link[aria-current=page]{border-bottom-color:var(--azul-escuro)}
+/* Cantos totalmente arredondados (formato de pílula). */
+.pilula{border-radius:999px}
+/* Faixa de atalhos em formato de pílula. */
+.pilulas{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;background:var(--azul-fundo);border-radius:999px;padding:.6rem 1rem}
+/* Cada atalho da faixa. */
+.pilulas a{background:var(--azul-claro);color:var(--texto);text-decoration:none;font-weight:600;border-radius:999px;padding:.4rem 1.2rem}
+/* Atalho com o mouse por cima. */
+.pilulas a:hover{background:var(--azul-medio)}
+/* PÁGINA INICIAL: seção de abertura em duas colunas. */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:2rem;align-items:center;padding:2.5rem 0 3rem}
+/* Título grande, que se ajusta à largura da tela. */
+.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);letter-spacing:-.02em}
+/* Texto de apoio do título. */
+.hero p.lead{font-size:1.15rem;color:var(--texto-suave);max-width:34rem}
+/* Composição decorativa de blocos azuis (posicionados de forma absoluta dentro dela). */
+.comp{position:relative;height:300px}
+/* Cada bloco da composição. */
+.comp div{position:absolute;border-radius:14px;padding:.6rem .8rem;font-weight:700;font-size:.9rem;color:var(--texto)}
+/* Posição, tamanho e cor de cada bloco da composição: */
+.c-a{top:0;left:32%;width:44%;height:120px;background:var(--azul-claro)}
+/* Bloco intermediário. */
+.c-c{top:80px;left:30%;width:36%;height:110px;background:var(--azul-medio)}
+/* Bloco azul com o texto do horário. */
+.c-b{top:105px;left:2%;width:42%;height:58px;background:var(--azul);z-index:2}
+/* Bloco claro com 'Confirmado'. */
+.c-d{top:30px;right:0;width:30%;height:100px;background:var(--azul-fundo);z-index:3}
+/* Bloco do fundo. */
+.c-e{top:175px;left:50%;width:34%;height:125px;background:var(--azul-claro);z-index:1}
+/* Linha com um quadrado de ícone e um cartão de texto. */
+.linha-img{display:grid;grid-template-columns:240px 1fr;gap:2rem;align-items:center;margin:3rem 0}
+/* Versão invertida: o quadrado fica do lado direito. */
+.linha-img.inv{grid-template-columns:1fr 240px}.linha-img.inv .quadrado{order:2}
+/* Quadrado com cantos arredondados e o ícone no centro. */
+.quadrado{aspect-ratio:1;border-radius:24px;display:grid;place-items:center}
+/* Cores dos quadrados. */
+.q1{background:var(--azul-medio)}.q2{background:var(--azul-claro)}.q3{background:var(--azul-fundo)}
+/* Cartão de texto azul claro. */
+.texto-card{background:var(--azul-fundo);border-radius:24px;padding:1.8rem}
+/* Limita a largura das linhas de texto (mais fácil de ler). */
+.texto-card p{max-width:60ch}
+/* Espaço acima do botão do cartão. */
+.texto-card .btn{margin-top:.6rem}
+/* Espaçamento acima e abaixo da faixa de atalhos. */
+.sep{margin:2.5rem 0}
+/* Caixa de título arredondada (login, confirmação). */
+.titulo-pill{background:var(--azul-fundo);border-radius:20px;padding:1rem 1.5rem;text-align:center;margin-bottom:1.5rem}
+/* Subtítulo da caixa. */
+.titulo-pill p{margin:0;color:var(--texto-suave)}
+/* RODAPÉ arredondado. */
+.rodape{max-width:1068px;margin:2rem auto 1rem;background:var(--azul-fundo);border-radius:24px;padding:1.5rem;text-align:center;color:var(--texto-suave);display:grid;gap:.8rem;justify-items:center}
+/* Atalhos do rodapé sem fundo próprio. */
+.rodape .pilulas{background:none;padding:0}
+/* Telas estreitas (celular): as colunas viram uma só e alguns tamanhos diminuem. */
+@media(max-width:700px){.hero,.linha-img,.linha-img.inv{grid-template-columns:1fr}.linha-img.inv .quadrado{order:0}.quadrado{max-width:200px}.comp{height:260px}.rodape{margin:2rem 1rem 1rem}}
+
+/* ===== AJUSTES PARA CELULAR (telas de até 600px) ===== */
+@media(max-width:600px){
+  /* Topo: logo à esquerda, botões à direita e menu em uma linha própria embaixo. */
+  .topo nav{display:grid;grid-template-columns:1fr auto;gap:.4rem .6rem;padding:.6rem .8rem}
+  /* Menu ocupa a linha inteira e rola de lado se não couber (em vez de quebrar em várias linhas). */
+  .topo .menu{grid-column:1 / -1;grid-row:2;margin:0;flex-wrap:nowrap;overflow-x:auto;gap:.3rem;-webkit-overflow-scrolling:touch}
+  /* Cada link vira alvo de toque de 44px e não encolhe. */
+  .topo a.link{flex:none;min-height:44px;display:flex;align-items:center;padding:0 .7rem}
+  /* Logo e botões alinhados na primeira linha. */
+  .topo .marca{justify-self:start}
+  .topo .acoes{justify-self:end;gap:.4rem}
+  /* Botões pequenos com área de toque maior. */
+  .btn.peq{min-height:44px}
+  /* Abas do painel: uma linha só, com rolagem horizontal. */
+  .tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tabs button{flex:none;white-space:nowrap;min-height:44px}
+  /* Grade de horários: 3 colunas folgadas no celular. */
+  .horarios{grid-template-columns:repeat(3,1fr)}
+  /* Mensagens (ex.: sem horários) ocupam a grade inteira, não só uma coluna. */
+  .horarios .msg{grid-column:1 / -1}
+  /* Links do rodapé com altura de toque confortável. */
+  .rodape .pilulas a{min-height:44px;display:inline-flex;align-items:center}
+  /* Inputs com 16px evitam o zoom automático do iPhone ao tocar no campo. */
+  input,select,textarea{font-size:16px}
+  /* Logo e pílulas de atalho também com 44px de altura de toque. */
+  .topo .marca,.pilulas a{min-height:44px;display:inline-flex;align-items:center}
+  /* Tabelas rolam na horizontal dentro do próprio quadro. */
+  .tabela{-webkit-overflow-scrolling:touch}
+}
+
+/* ===== AJUSTES PARA TABLET E PC ===== */
+/* Mensagens dentro da grade de horários ocupam a linha inteira (evita texto espremido em 1 coluna). */
+.horarios .msg{grid-column:1 / -1}
+/* Em telas médias o rodapé ganha margem lateral para não encostar nas bordas. */
+@media(max-width:1100px){.rodape{margin-left:1rem;margin-right:1rem}}
+
+/* ===== RECURSOS / INÍCIO: atalhos funcionam de forma visível e itens decorativos não parecem botões ===== */
+/* Rolagem suave ao clicar nos atalhos (desligada para quem prefere menos movimento). */
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* O bloco de destino não gruda no topo da tela. */
+.linha-img,#seguro{scroll-margin-top:1.5rem}
+/* Atalhos: cursor de clique, foco visível e leve 'aperto' ao clicar (mesmo visual de antes). */
+.pilulas.sep a{cursor:pointer;transition:background .15s,transform .1s}
+.pilulas.sep a:active{transform:scale(.96)}
+.pilulas.sep a:focus-visible{outline:3px solid var(--azul-escuro);outline-offset:2px}
+/* O bloco de destino pisca ao chegar (classe 'destaque' colocada pelo main.js). */
+.destaque .texto-card,.destaque.texto-card{animation:destaque 1.6s ease-out}
+@keyframes destaque{0%{box-shadow:0 0 0 5px var(--azul-medio)}100%{box-shadow:0 0 0 5px transparent}}
+/* Quadrados com ícone e o desenho da página inicial são só decoração: não reagem a mouse/toque e mostram cursor normal. */
+.quadrado,.comp,.comp *{pointer-events:none;user-select:none;cursor:default}
+
+/* ===== ABAS "SOU PACIENTE / SOU CLÍNICA" (login e cadastro) ===== */
+/* Duas abas dividem a largura igualmente e o texto fica centralizado. */
+.tabs.dois{flex-wrap:nowrap}
+.tabs.dois button,.tabs.dois a{flex:1;text-align:center;min-height:44px;display:flex;align-items:center;justify-content:center}
+/* Abas feitas com link (cadastro): mesmo visual das abas de botão. */
+.tabs a{font-weight:600;text-decoration:none;padding:.7rem .75rem;border-bottom:4px solid transparent;margin-bottom:-2px;color:var(--texto-suave)}
+.tabs a:hover{color:var(--azul-escuro)}
+.tabs a[aria-current=page]{color:var(--azul-escuro);border-bottom-color:var(--azul)}
+.tabs a:focus-visible{outline:3px solid var(--azul-escuro);outline-offset:2px}
+
+/* ===== BOTÃO "MOSTRAR SENHA" (olhinho ao lado do campo) ===== */
+/* Linha com o campo de senha e, ao lado dele (à direita), o botão do olhinho. */
+.campo-senha{display:flex;align-items:center;gap:.5rem}
+/* O campo ocupa todo o espaço que sobrar na linha. */
+.campo-senha input{flex:1 1 auto;min-width:0;width:auto}
+/* O botão: quadrado de 44px (bom para o toque), com a mesma borda azul e cantos dos campos. */
+.campo-senha .ver-senha{flex:0 0 auto;width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;border:2px solid var(--azul-claro);border-radius:8px;background:var(--branco);color:var(--azul-escuro);cursor:pointer}
+.campo-senha .ver-senha:hover{background:var(--azul-fundo)}
+.campo-senha .ver-senha:focus-visible{outline:3px solid var(--azul-escuro);outline-offset:1px}
+/* Quando a senha está visível (olho riscado), o botão fica destacado em azul. */
+.campo-senha .ver-senha[aria-pressed="true"]{background:var(--azul-fundo);border-color:var(--azul)}
+
+/* ===== TELA DE ESCOLHA DE ACESSO (paciente ou consultório) ===== */
+/* Duas colunas no PC; uma coluna no celular. */
+.escolha{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;max-width:760px;margin:0 auto}
+/* Cartão grande clicável (é um link inteiro). */
+.escolha-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.4rem;background:var(--azul-fundo);border:2px solid var(--azul-fundo);border-radius:24px;padding:2rem 1.4rem;text-decoration:none;color:var(--texto);transition:border-color .15s,transform .15s}
+.escolha-card:hover,.escolha-card:focus-visible{border-color:var(--azul);transform:translateY(-2px)}
+.escolha-card h2{margin:.3rem 0 0}
+.escolha-card p{margin:0 0 .8rem;max-width:30ch}
+/* Círculo com o ícone. */
+.escolha-icone{display:inline-flex;align-items:center;justify-content:center;width:76px;height:76px;border-radius:50%;background:var(--branco);color:var(--azul-escuro)}
+/* O botão dentro do cartão empurra para o rodapé do cartão. */
+.escolha-card .btn{margin-top:auto}
+@media (max-width:600px){.escolha{grid-template-columns:1fr}}
+
+/* ===== FAIXA DE AVISO (senha de exemplo) ===== */
+.faixa-aviso{background:#FEF3C7;color:#78350F;text-align:center;padding:.6rem 1rem;font-weight:600;font-size:.95rem}
+.faixa-aviso a{color:#78350F}
+
+/* ===== VISUAL REFINADO + LOGO + BOTÃO DE TEMA ===== */
+/* Cartões com sombra suave e transição suave nas cores dos botões. */
+.card{box-shadow:var(--sombra)}
+.btn,.horario,.tabs button,.tabs a{transition:background .15s,color .15s,border-color .15s}
+/* Logo (ícone de calendário) ao lado do nome na barra do topo. */
+.topo .marca{display:inline-flex;align-items:center;gap:.5rem;font-family:"Fraunces",Georgia,serif;font-size:1.15rem}
+/* Ícone do logo (versão branca, pois a marca fica sobre fundo azul). */
+.topo .marca img{height:26px;width:auto;flex:none}
+/* Logo completo (imagem enviada pelo cliente). */
+.logo-completo{max-width:min(320px,80%);height:auto}
+/* Botão redondo que alterna entre tema claro e escuro (44px = bom para toque). */
+.tema{width:44px;height:44px;border-radius:50%;border:2px solid var(--azul-claro);background:var(--branco);color:var(--azul-escuro);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.tema:hover{background:var(--azul-fundo)}
+/* No tema escuro: o botão secundário fica transparente com contorno azul claro. */
+:root[data-tema="escuro"] .btn.sec{background:transparent;color:var(--azul-escuro);border-color:var(--azul-escuro)}
+:root[data-tema="escuro"] .faixa-aviso{background:#3B2F0B;color:#FDE68A}
+:root[data-tema="escuro"] .faixa-aviso a{color:#FDE68A}
+
+/* ===== VITRINE DA PÁGINA INICIAL: mini-tela + cartões flutuantes ===== */
+/* Área da vitrine: espaço reservado para os cartões que saem da mini-tela. */
+.vitrine{position:relative;padding:1.6rem 1.2rem 2rem;max-width:460px;margin:0 auto;width:100%;box-sizing:border-box}
+/* Mini-tela: um cartão branco que imita a tela de agendar. */
+.mock{background:var(--branco);border:2px solid var(--azul-claro);border-radius:20px;padding:1.1rem 1.2rem 1.3rem;box-shadow:0 18px 40px rgba(29,95,204,.18);animation:sobe .7s ease both}
+.mock-topo{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;flex-wrap:wrap;margin-bottom:.4rem}
+.mock-topo b{font-family:"Lora",Georgia,serif;font-size:1.05rem}
+.mock-topo span{font-size:.8rem;color:var(--texto-suave)}
+/* Linhas de informação (profissional e data). */
+.mock-linha{background:var(--azul-fundo);border-radius:12px;padding:.5rem .8rem;margin-top:.55rem}
+.mock-linha small{display:block;font-size:.72rem;color:var(--texto-suave)}
+.mock-linha strong{font-size:.92rem}
+/* Grade de horários livres; o escolhido é azul e pulsa de leve. */
+.mock-horas{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.8rem}
+.mock-horas span{border:2px solid var(--azul-medio);border-radius:10px;text-align:center;padding:.4rem 0;font-weight:600;font-size:.9rem}
+.mock-horas .sel{background:var(--botao);border-color:var(--botao);color:#fff;animation:pulsa 2.4s ease-in-out infinite}
+.mock-horas .off{opacity:.4;text-decoration:line-through}
+/* Botão desenhado da mini-tela. */
+.mock-btn{margin-top:.9rem;background:var(--botao);color:#fff;text-align:center;font-weight:700;border-radius:999px;padding:.6rem}
+/* Cartões flutuantes: sombra, ícone e leve movimento para cima e para baixo. */
+.chip{position:absolute;display:flex;align-items:center;gap:.45rem;background:var(--branco);border:2px solid var(--azul-claro);border-radius:999px;padding:.45rem .9rem;font-weight:700;font-size:.85rem;box-shadow:0 8px 22px rgba(29,95,204,.18);white-space:nowrap;animation:sobe .7s ease both,flutua 5s ease-in-out infinite}
+.chip svg{flex:none}
+.chip.c1{top:.2rem;right:-.2rem;color:var(--sucesso);animation-delay:.3s,.3s}
+.chip.c2{bottom:2.2rem;left:-.4rem;color:var(--azul-escuro);animation-delay:.6s,1.2s}
+.chip.c3{bottom:.1rem;right:1rem;color:var(--texto);animation-delay:.9s,2s}
+.chip.c3 svg{color:var(--azul)}
+/* Texto dos cartões na cor normal (o ícone é que leva a cor). */
+.chip span{color:var(--texto)}
+/* Animações: entrada (sobe), flutuar e pulsar. */
+@keyframes sobe{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes flutua{0%,100%{translate:0 0}50%{translate:0 -7px}}
+@keyframes pulsa{0%,100%{box-shadow:0 0 0 0 rgba(60,141,255,.5)}50%{box-shadow:0 0 0 7px rgba(60,141,255,0)}}
+/* Os cartões flutuantes são só enfeite: não são clicáveis. */
+.chip,.chip *{pointer-events:none;user-select:none;cursor:default}
+/* A mini-tela é um link: mãozinha, leve elevação ao passar o mouse e contorno ao usar o teclado. */
+.mock{display:block;color:inherit;text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.mock:hover{transform:translateY(-4px);box-shadow:0 22px 46px rgba(29,95,204,.28)}
+.mock:focus-visible{outline:3px solid var(--azul);outline-offset:4px}
+.mock:hover .mock-btn{background:var(--botao-hover)}
+/* Quem prefere menos movimento não vê as animações. */
+@media(prefers-reduced-motion:reduce){.mock,.chip,.mock-horas .sel{animation:none!important}}
+/* Celular: cartões menores e sem sair da tela. */
+@media(max-width:600px){.vitrine{padding:1.6rem .4rem 2rem}.chip{font-size:.78rem;padding:.35rem .7rem}.chip.c1{right:0}.chip.c2{left:0}}
+:root[data-tema="escuro"] .mock{box-shadow:0 18px 40px rgba(0,0,0,.5)}
+:root[data-tema="escuro"] .chip{box-shadow:0 8px 22px rgba(0,0,0,.45)}
+/* Celulares estreitos: barra do topo mais compacta para nada sair da tela. */
+@media(max-width:480px){.topo nav{gap:.4rem}.topo .marca{padding:.3rem .75rem;font-size:1rem;gap:.35rem}.topo .marca img{height:22px}.topo .acoes{gap:.4rem;min-width:0}.topo .acoes .btn.peq{padding:.2rem .6rem;font-size:.85rem;white-space:nowrap}.tema{width:40px;height:40px}}

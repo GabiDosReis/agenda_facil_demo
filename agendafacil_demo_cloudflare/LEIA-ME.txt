@@ -1,0 +1,4 @@
+Versão DEMONSTRAÇÃO do AgendaFácil para Cloudflare Pages (site estático, sem PHP e sem MySQL).
+Usa dados de teste guardados no navegador de quem acessa (USE_MOCK = true em js/api.js).
+Login de clínica de teste: admin@clinica.com / admin123 (a senha de exemplo aciona o aviso amarelo de propósito).
+Pacientes: use "Criar conta". Cada visitante tem os próprios dados; nada é compartilhado entre pessoas.
