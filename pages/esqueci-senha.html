@@ -1,0 +1,47 @@
+<!doctype html>
+<!-- Idioma da página: português do Brasil. -->
+<html lang="pt-BR">
+<head>
+<!-- Codificação dos caracteres (os acentos funcionam). -->
+<meta charset="utf-8">
+<!-- Faz a página se ajustar à largura do celular. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Título que aparece na aba do navegador. -->
+<!-- Ícone da aba do navegador. -->
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<title>Esqueci minha senha · AgendaFácil</title>
+<!-- Liga o arquivo de estilos (cores e layout). -->
+<link rel="stylesheet" href="../css/style.css?v=12">
+</head>
+<!-- data-page diz ao main.js qual tela é esta. -->
+<body data-page="esqueci">
+<!-- Espaço da barra do topo: o main.js a desenha conforme quem está logado. -->
+<header class="topo" id="topo"></header>
+<!-- Conteúdo principal da página. -->
+<main>
+<!-- Coluna estreita e centralizada. -->
+<div class="estreito" style="margin:1rem auto">
+<!-- Caixa de título da tela. -->
+<div class="titulo-pill"><h1 style="margin:0">Esqueci minha senha</h1><p>Informe o e-mail da sua conta. Enviaremos um link para criar uma senha nova.</p></div>
+<!-- Formulário (o main.js trata o envio). -->
+<form id="form" class="card" novalidate>
+<!-- E-mail da conta. -->
+<label for="email">E-mail</label><input id="email" type="email" autocomplete="email" placeholder="voce@email.com" required>
+<!-- Espaço para erro ou confirmação. -->
+<p id="erro" class="erro" role="alert"></p><p id="ok" class="msg" role="status"></p>
+<!-- Botão que envia o pedido. -->
+<button class="btn cheio pilula" type="submit">Enviar link</button></form>
+<!-- Volta para o login. -->
+<p style="text-align:center;margin-top:1.2rem"><a href="acesso.html?acao=entrar">Voltar para o login</a></p>
+</div>
+</main>
+<!-- Quadro das mensagens flutuantes (o main.js escreve aqui). -->
+<div id="aviso" role="status" aria-live="polite"></div>
+<!-- API falsa (só é usada quando USE_MOCK = true em api.js). -->
+<script src="../js/mock.js?v=12"></script>
+<!-- Comunicação com a API (servidor PHP). -->
+<script src="../js/api.js?v=12"></script>
+<!-- Lógica da tela. -->
+<script src="../js/main.js?v=12"></script>
+</body>
+</html>

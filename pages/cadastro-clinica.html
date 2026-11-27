@@ -1,0 +1,60 @@
+<!doctype html>
+<!-- Idioma da página: português do Brasil. -->
+<html lang="pt-BR">
+<head>
+<!-- Codificação dos caracteres (os acentos funcionam). -->
+<meta charset="utf-8">
+<!-- Faz a página se ajustar à largura do celular. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Título que aparece na aba do navegador. -->
+<!-- Ícone da aba do navegador. -->
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<title>Cadastrar clínica · AgendaFácil</title>
+<!-- Liga o arquivo de estilos (cores e layout). -->
+<link rel="stylesheet" href="../css/style.css?v=12">
+</head>
+<!-- data-page diz ao main.js qual tela é esta. -->
+<body data-page="cadastro-clinica">
+<!-- Espaço da barra do topo: o main.js a desenha conforme quem está logado. -->
+<header class="topo" id="topo"></header>
+<!-- Conteúdo principal da página. -->
+<main>
+<!-- Coluna estreita e centralizada, com o título. -->
+<div class="estreito" style="margin:auto">
+<!-- Escolha do tipo de cadastro: paciente (outra página) ou clínica (esta página). -->
+<nav class="tabs dois" aria-label="Tipo de cadastro"><a href="cadastro.html">Uso pessoal</a><a href="cadastro-clinica.html" aria-current="page">Uso clínico</a></nav>
+<h1>Cadastrar clínica</h1>
+<!-- Formulário de cadastro da clínica e do responsável (o main.js trata o envio). -->
+<form id="form" class="card" novalidate>
+<!-- Dados da clínica. -->
+<h2 style="margin-top:0;font-size:1.1rem">Dados da clínica</h2>
+<label for="clinica">Nome da clínica</label><input id="clinica" autocomplete="organization" required>
+<!-- CNPJ (inputmode=numeric abre o teclado numérico no celular). -->
+<label for="cnpj">CNPJ</label><input id="cnpj" inputmode="numeric" placeholder="00.000.000/0000-00" required>
+<label for="telc">Telefone da clínica</label><input id="telc" type="tel" autocomplete="tel" required>
+<label for="endereco">Endereço (opcional)</label><input id="endereco" autocomplete="street-address">
+<!-- Dados de quem vai administrar o painel. -->
+<h2 style="font-size:1.1rem;margin-top:1.4rem">Responsável pelo painel</h2>
+<label for="nome">Nome completo</label><input id="nome" autocomplete="name" required>
+<label for="email">E-mail (será o seu login)</label><input id="email" type="email" autocomplete="email" required>
+<label for="senha">Senha (mínimo 8 caracteres)</label><input id="senha" type="password" autocomplete="new-password" required>
+<label for="senha2">Confirmar senha</label><input id="senha2" type="password" autocomplete="new-password" required>
+<!-- Aceite da política de privacidade (LGPD). -->
+<label class="check" style="margin-top:1rem"><input id="lgpd" type="checkbox">Li e aceito a <a href="privacidade.html">política de privacidade</a> (LGPD).</label>
+<!-- Espaço para a mensagem de erro. -->
+<p id="erro" class="erro" role="alert"></p>
+<!-- Botão que envia o formulário. -->
+<button class="btn cheio" type="submit">Cadastrar clínica</button></form>
+<!-- Link para o login da clínica. -->
+<p>Sua clínica já tem conta? <a href="login.html?tipo=clinica">Entrar</a></p></div>
+</main>
+<!-- Quadro das mensagens flutuantes (o main.js escreve aqui). -->
+<div id="aviso" role="status" aria-live="polite"></div>
+<!-- API falsa (só é usada quando USE_MOCK = true em api.js). -->
+<script src="../js/mock.js?v=12"></script>
+<!-- Comunicação com a API (servidor PHP). -->
+<script src="../js/api.js?v=12"></script>
+<!-- Lógica da tela. -->
+<script src="../js/main.js?v=12"></script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+Versão DEMONSTRAÇÃO do AgendaFácil (site estático, sem PHP e sem MySQL).
+Os dados de teste ficam no navegador de cada visitante (USE_MOCK = true em js/api.js).
+Clínica de teste: admin@clinica.com / admin123. Pacientes: use "Criar conta".
