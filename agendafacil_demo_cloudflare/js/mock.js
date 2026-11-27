@@ -49,6 +49,8 @@ function horariosLivres(d, profId, tipoId, data) {
   // Intervalos das consultas já agendadas desse profissional nesse dia.
   const ocupados = d.agendamentos.filter(a => a.profissional_id === profId && a.status === 'agendado' && a.inicio.startsWith(data))
     .map(a => [min(a.inicio.slice(11)), min(a.fim.slice(11))]);
+  // Bloqueios (férias, feriados...) do profissional ou da clínica inteira que tocam esse dia.
+  const bloqs = (d.bloqueios || []).filter(b => (b.profissional_id === null || b.profissional_id === profId) && b.inicio < data + 'T23:59' && b.fim > data + 'T00:00');
   // Momento atual e lista dos horários livres.
   const agora = new Date(), livres = [];
   // Para cada expediente do dia...
@@ -59,6 +61,8 @@ function horariosLivres(d, profId, tipoId, data) {
       const fim = t + tipo.duracao_min;
       // Pula horários que já passaram.
       if (new Date(data + 'T' + hhmm(t)) < agora) continue;                  // RN06
+      // Pula horários dentro de um bloqueio.
+      if (bloqs.some(b => b.inicio < data + 'T' + hhmm(fim) && b.fim > data + 'T' + hhmm(t))) continue;
       // Pula horários que se sobrepõem a outra consulta.
       if (ocupados.some(([i, f]) => t < f && i < fim)) continue;             // RN09
       // Horário livre: guarda.
@@ -168,7 +172,7 @@ async function mockRequest(method, fullPath, body) {
   if (method === 'GET' && path === '/agendamentos/meus') {
     exigir('paciente');
     return d.agendamentos.filter(a => a.paciente_id === user.id).sort((a, b) => b.inicio.localeCompare(a.inicio))
-      .map(a => ({ ...a, clinica_id: 1, clinica: 'Clínica Exemplo', profissional: nomeProf(a.profissional_id), tipo: nomeTipo(a.tipo_consulta_id) }));
+      .map(a => ({ ...a, confirmado: !!a.confirmado_em, clinica_id: 1, clinica: 'Clínica Exemplo', profissional: nomeProf(a.profissional_id), tipo: nomeTipo(a.tipo_consulta_id) }));
   }
   // Cancelar consulta.
   if ((m = path.match(/^\/agendamentos\/(\d+)\/cancelar$/)) && method === 'PATCH') {
@@ -180,7 +184,7 @@ async function mockRequest(method, fullPath, body) {
   if (method === 'GET' && path === '/clinica/agenda') {
     exigir('admin_clinica');
     return d.agendamentos.filter(a => a.inicio.startsWith(q.data)).sort((a, b) => a.inicio.localeCompare(b.inicio))
-      .map(a => ({ ...a, profissional: nomeProf(a.profissional_id), tipo: nomeTipo(a.tipo_consulta_id), paciente: (d.usuarios.find(u => u.id === a.paciente_id) || {}).nome }));
+      .map(a => ({ ...a, profissional: nomeProf(a.profissional_id), tipo: nomeTipo(a.tipo_consulta_id), paciente: (d.usuarios.find(u => u.id === a.paciente_id) || {}).nome, telefone: (d.usuarios.find(u => u.id === a.paciente_id) || {}).telefone || '', confirmado: !!a.confirmado_em, lembrete_enviado: !!a.lembrete_em }));
   }
   // Listar e criar profissionais.
   if (path === '/clinica/profissionais') {
@@ -207,6 +211,92 @@ async function mockRequest(method, fullPath, body) {
   // Remover expediente.
   if ((m = path.match(/^\/clinica\/expedientes\/(\d+)$/)) && method === 'DELETE') {
     exigir('admin_clinica'); d.expedientes = d.expedientes.filter(e => e.id !== +m[1]); dbSave(d); return { ok: true };
+  }
+  // ===== ROTAS EXTRAS DA DEMONSTRAÇÃO (lista de espera, bloqueios, relatório, lembretes, presença e reagendar) =====
+  // Nome do paciente e telefone (auxiliar).
+  const pac = (id) => d.usuarios.find(u => u.id === id) || {};
+  // Entrar na lista de espera.
+  if (method === 'POST' && path === '/lista-espera') {
+    exigir('paciente'); d.espera = d.espera || [];
+    d.espera.push({ id: ++d.seq, paciente_id: user.id, profissional_id: body.profissional_id, tipo_consulta_id: body.tipo_consulta_id, data: body.data, status: 'aguardando' });
+    dbSave(d); return { ok: true };
+  }
+  // Lista de espera do paciente.
+  if (method === 'GET' && path === '/lista-espera') {
+    exigir('paciente');
+    return (d.espera || []).filter(e => e.paciente_id === user.id).map(e => ({ ...e, clinica_id: 1, profissional: nomeProf(e.profissional_id), tipo: nomeTipo(e.tipo_consulta_id) }));
+  }
+  // Sair da lista de espera.
+  if ((m = path.match(/^\/lista-espera\/(\d+)$/)) && method === 'DELETE') { exigir('paciente'); d.espera = (d.espera || []).filter(e => e.id !== +m[1]); dbSave(d); return { ok: true }; }
+  // Lista de espera vista pela clínica.
+  if (method === 'GET' && path === '/clinica/lista-espera') {
+    exigir('admin_clinica');
+    return (d.espera || []).map(e => ({ ...e, paciente: pac(e.paciente_id).nome, telefone: pac(e.paciente_id).telefone || '', profissional: nomeProf(e.profissional_id), tipo: nomeTipo(e.tipo_consulta_id) }));
+  }
+  // Bloqueios: listar, criar e remover.
+  if (method === 'GET' && path === '/clinica/bloqueios') {
+    exigir('admin_clinica');
+    return (d.bloqueios || []).map(b => ({ ...b, profissional: b.profissional_id ? nomeProf(b.profissional_id) : 'Toda a clínica' }));
+  }
+  if (method === 'POST' && path === '/clinica/bloqueios') {
+    exigir('admin_clinica'); d.bloqueios = d.bloqueios || [];
+    const fimDia = new Date((body.data_fim || body.data_inicio) + 'T12:00'); fimDia.setDate(fimDia.getDate() + 1);
+    const inicio = body.data_inicio + 'T' + (body.hora_inicio || '00:00');
+    const fim = body.hora_fim ? (body.data_fim || body.data_inicio) + 'T' + body.hora_fim : fimDia.toISOString().slice(0, 10) + 'T00:00';
+    if (fim <= inicio) throw erro('O fim do bloqueio deve ser depois do início.', 400);
+    d.bloqueios.push({ id: ++d.seq, profissional_id: body.profissional_id || null, inicio, fim, motivo: body.motivo || '' });
+    const conflitos = d.agendamentos.filter(a => a.status === 'agendado' && (!body.profissional_id || a.profissional_id === body.profissional_id) && a.inicio < fim && a.fim > inicio).length;
+    dbSave(d); return { ok: true, conflitos };
+  }
+  if ((m = path.match(/^\/clinica\/bloqueios\/(\d+)$/)) && method === 'DELETE') { exigir('admin_clinica'); d.bloqueios = (d.bloqueios || []).filter(b => b.id !== +m[1]); dbSave(d); return { ok: true }; }
+  // Presença: compareceu ou faltou.
+  if ((m = path.match(/^\/clinica\/agendamentos\/(\d+)\/status$/)) && method === 'PATCH') {
+    exigir('admin_clinica'); const a = d.agendamentos.find(x => x.id === +m[1]); if (!a) throw erro('Agendamento não encontrado.', 404);
+    a.status = body.status; dbSave(d); return { ok: true };
+  }
+  // Reagendar (paciente ou clínica): confere o horário e move a consulta.
+  if ((m = path.match(/^\/agendamentos\/(\d+)\/reagendar$/)) && method === 'PATCH') {
+    exigir(); const a = d.agendamentos.find(x => x.id === +m[1]); if (!a) throw erro('Agendamento não encontrado.', 404);
+    const tipo = d.tipos.find(t => t.id === a.tipo_consulta_id); const [data, hora] = body.inicio.split('T');
+    a.status = 'cancelado';   // libera o horário antigo para a conferência
+    const livre = horariosLivres(d, a.profissional_id, a.tipo_consulta_id, data).includes(hora);
+    if (!livre) { a.status = 'agendado'; throw erro('Este horário acabou de ser ocupado. Escolha outro.', 409); }
+    a.status = 'agendado'; a.inicio = body.inicio; a.fim = data + 'T' + hhmm(min(hora) + tipo.duracao_min); a.confirmado_em = null; a.lembrete_em = null;
+    dbSave(d); return { ok: true };
+  }
+  // Lembrete de uma consulta: na demonstração gera o link do WhatsApp com a mensagem pronta.
+  if ((m = path.match(/^\/clinica\/agendamentos\/(\d+)\/lembrete$/)) && method === 'POST') {
+    exigir('admin_clinica'); const a = d.agendamentos.find(x => x.id === +m[1]); if (!a) throw erro('Agendamento não encontrado.', 404);
+    a.lembrete_em = new Date().toISOString(); dbSave(d);
+    const msg = `Olá, ${(pac(a.paciente_id).nome || '').split(' ')[0]}! Lembrete da sua consulta em ${a.inicio.slice(8, 10)}/${a.inicio.slice(5, 7)} às ${a.inicio.slice(11, 16)}. Confirme: ${location.origin}${location.pathname.replace(/pages\/.*$/, '')}pages/confirmar.html?t=mock-${a.id}`;
+    return { modo: 'link', link: 'https://wa.me/55' + String(pac(a.paciente_id).telefone || '').replace(/\D/g, '') + '?text=' + encodeURIComponent(msg) };
+  }
+  // Enviar todos os lembretes pendentes do dia.
+  if (method === 'POST' && path === '/clinica/lembretes/enviar') {
+    exigir('admin_clinica'); let n = 0;
+    d.agendamentos.filter(a => a.status === 'agendado' && a.inicio.startsWith(body.data) && !a.lembrete_em && !a.confirmado_em).forEach(a => { a.lembrete_em = new Date().toISOString(); n++; });
+    dbSave(d); return { enviados: n, falhas: 0 };
+  }
+  // Página pública do link do lembrete: ver, confirmar e cancelar (o código na demonstração é 'mock-' + número da consulta).
+  if ((m = path.match(/^\/lembretes\/mock-(\d+)(\/confirmar|\/cancelar)?$/))) {
+    const a = d.agendamentos.find(x => x.id === +m[1]); if (!a) throw erro('Link inválido ou vencido.', 404);
+    if (method === 'POST' && m[2] === '/confirmar') { a.confirmado_em = new Date().toISOString(); dbSave(d); return { ok: true }; }
+    if (method === 'POST' && m[2] === '/cancelar') { a.status = 'cancelado'; dbSave(d); return { ok: true }; }
+    return { paciente: (pac(a.paciente_id).nome || '').split(' ')[0], inicio: a.inicio, status: a.status, confirmado: !!a.confirmado_em, profissional: nomeProf(a.profissional_id), tipo: nomeTipo(a.tipo_consulta_id) };
+  }
+  // Relatório do período: totais, por profissional e por dia.
+  if (method === 'GET' && path === '/clinica/relatorio') {
+    exigir('admin_clinica');
+    const agora = new Date().toISOString().slice(0, 16);
+    const lista = d.agendamentos.filter(a => a.inicio.slice(0, 10) >= q.de && a.inicio.slice(0, 10) <= q.ate);
+    const conta = (as) => {
+      const faltas = as.filter(a => a.status === 'faltou').length, canceladas = as.filter(a => a.status === 'cancelado').length;
+      const futuras = as.filter(a => a.status === 'agendado' && a.inicio > agora).length;
+      const atendidas = as.filter(a => a.status === 'concluido' || (a.status === 'agendado' && a.inicio <= agora)).length;
+      return { total: as.length, atendidas, faltas, canceladas, futuras, taxa_faltas: atendidas + faltas ? faltas / (atendidas + faltas) * 100 : null };
+    };
+    const agrupa = (chave) => [...new Set(lista.map(chave))].sort().map(k => ({ k, ...conta(lista.filter(a => chave(a) === k)) }));
+    return { totais: conta(lista), por_profissional: agrupa(a => a.profissional_id).map(l => ({ ...l, profissional: nomeProf(l.k) })), por_dia: agrupa(a => a.inicio.slice(0, 10)).map(l => ({ ...l, dia: l.k })) };
   }
   // Nenhuma rota serviu: erro 404. (Lembretes, bloqueios, lista de espera e relatórios não existem na API falsa.)
   throw erro('Rota não encontrada: ' + method + ' ' + path, 404);
